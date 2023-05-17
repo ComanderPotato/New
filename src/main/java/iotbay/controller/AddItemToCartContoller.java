@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import iotbay.model.dao.*;
@@ -27,6 +28,9 @@ public class AddItemToCartContoller extends HttpServlet{
         String userType;
         int userID;
         CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
+        CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+        ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
+
         if(session.getAttribute("user") == null) {
             guest = (Guest) session.getAttribute("guest");
             userType = "guest";
@@ -36,15 +40,28 @@ public class AddItemToCartContoller extends HttpServlet{
             userType = "user";
             userID = user.getID();
         }
-        Product selectedProduct = (Product) session.getAttribute("selectedProduct");
-        CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
-//        int quantity = (int) session.getAttribute("quantity");
-        Cart cart = (Cart) session.getAttribute("cart");
-        try {
-            cartItemManager.addCartItem(cart.getID(), selectedProduct, 1);
+        int selectedProductID = Integer.parseInt(request.getParameter("selectedProductID"));
+        double selectedProductPrice = Double.parseDouble(request.getParameter("selectedProductPrice"));
+        String quantity = request.getParameter("quantity");
+        int quantityParsed;
+        if(quantity == null || quantity.isEmpty()) {
             request.getRequestDispatcher("main.jsp").include(request, response);
-        } catch (NullPointerException | SQLException ex) {
-            Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            quantityParsed = Integer.parseInt(quantity);
+            Cart cart = (Cart) session.getAttribute("cart");
+            try {
+                Product product = productManager.getProduct(selectedProductID);
+                if(product.getQuantity() < quantityParsed) {
+                    request.getRequestDispatcher("MainServlet").include(request, response);
+                } else {
+                    productManager.updateQuantity(selectedProductID, (product.getQuantity() - quantityParsed));
+                }
+                cartItemManager.addCartItem(cart.getID(), selectedProductID, selectedProductPrice, quantityParsed);
+                session.setAttribute("cartItems", cartItemManager.fetchCartItems(cart.getID()));
+                request.getRequestDispatcher("MainServlet").include(request, response);
+            } catch (NullPointerException | SQLException ex) {
+                Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }

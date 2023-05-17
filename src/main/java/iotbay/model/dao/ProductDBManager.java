@@ -31,14 +31,34 @@ public class ProductDBManager {
         }
         return products;
     }
-    public String fetchProductCategory(int categoryID) throws SQLException {
-        System.out.println("Hello");
+    public int fetchProductCategory(int categoryID) throws SQLException {
         prepStmt = conn.prepareStatement("SELECT * FROM PRODUCTCATEGORY WHERE ID = ?");
         prepStmt.setInt(1, categoryID);
         rs = prepStmt.executeQuery();
         if(rs.next()) {
-            return rs.getString("category");
+            return rs.getInt("category");
+        }
+        return -1;
+    }
+    public Product getProduct(int id) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM PRODUCT WHERE ID = ?");
+        prepStmt.setInt(1, id);
+        rs = prepStmt.executeQuery();
+        if(rs.next()) {
+            return new Product(rs.getInt(1),
+                               rs.getInt(2),
+                               rs.getString(3),
+                               rs.getString(4),
+                               rs.getString(5),
+                               rs.getDouble(6),
+                               rs.getInt(7));
         }
         return null;
+    }
+    public void updateQuantity(int id, int quantity) throws SQLException {
+        prepStmt = conn.prepareStatement("UPDATE PRODUCT SET QUANTITY = ? WHERE ID = ?");
+        prepStmt.setInt(1, quantity);
+        prepStmt.setInt(2, id);
+        prepStmt.executeUpdate();
     }
 }

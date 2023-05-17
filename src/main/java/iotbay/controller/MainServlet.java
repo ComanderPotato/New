@@ -1,11 +1,7 @@
 package iotbay.controller;
 
-import iotbay.model.Customer;
-import iotbay.model.Product;
-import iotbay.model.UserAccount;
-import iotbay.model.dao.CustomerDBManager;
-import iotbay.model.dao.ProductDBManager;
-import iotbay.model.dao.UserAccountDBManager;
+import iotbay.model.*;
+import iotbay.model.dao.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -28,11 +24,19 @@ public class MainServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Validator validator = new Validator();
         ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
+        CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
+        CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+        Cart cart = (Cart) session.getAttribute("cart");
+        UserAccount user = (UserAccount) session.getAttribute("user");
         validator.clear(session);
+        ArrayList<CartItem> cartItems;
         ArrayList<Product> products;
         try {
             products = productManager.fetchProducts();
             session.setAttribute("products", products);
+            cartItems = cartItemManager.fetchCartItems(cart.getID());
+            session.setAttribute("cartItems", cartItems);
+            session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
         } catch (NullPointerException | SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
 
@@ -44,11 +48,19 @@ public class MainServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Validator validator = new Validator();
         ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
+        CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
+        CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+        Cart cart = (Cart) session.getAttribute("cart");
+        UserAccount user = (UserAccount) session.getAttribute("user");
         validator.clear(session);
+        ArrayList<CartItem> cartItems;
         ArrayList<Product> products;
         try {
             products = productManager.fetchProducts();
             session.setAttribute("products", products);
+            cartItems = cartItemManager.fetchCartItems(cart.getID());
+            session.setAttribute("cartItems", cartItems);
+            session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
         } catch (NullPointerException | SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
 

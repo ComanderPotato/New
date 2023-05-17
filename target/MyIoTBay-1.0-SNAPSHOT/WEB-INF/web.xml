@@ -30,6 +30,10 @@
         <servlet-class>iotbay.controller.AddItemToCartContoller</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RemoveItemFromCartController</servlet-name>
+        <servlet-class>iotbay.controller.RemoveItemFromCartController</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>LogoutController</servlet-name>
         <servlet-class>iotbay.controller.LogoutController</servlet-class>
     </servlet>
@@ -61,6 +65,10 @@
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveItemFromCartController</servlet-name>
+        <url-pattern>/RemoveItemFromCartController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

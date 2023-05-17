@@ -2,6 +2,7 @@
 <%@page import="iotbay.model.*" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="iotbay.model.dao.UserAccountDBManager" %>
+<%@ page import="iotbay.model.dao.ProductDBManager" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,9 +24,6 @@
             padding: 10px;
         }
 
-        .navbar-left {
-            flex-grow: 1;
-        }
 
         .navbar-logo {
             font-size: 20px;
@@ -149,6 +147,7 @@
         .dropdown-content:hover {
             display: block;
         }
+
         .dropdown-content a {
             display: block;
             padding: 8px 16px;
@@ -158,7 +157,53 @@
             border-radius: 4px;
             margin-bottom: 2px;
         }
+        .dropdown-cart {
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            z-index: 1;
+        }
 
+        .cart-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .product-price {
+            margin: 0;
+        }
+
+        .product-quantity {
+            margin: 0;
+            font-style: italic;
+        }
+
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .remove-button:hover {
+            background-color: #d32f2f;
+        }
         .dropdown-content a:hover {
             background-color: #f2f2f2;
         }
@@ -181,6 +226,10 @@
         .signup:hover {
             background-color: #cbf5e8;
         }
+        .scrollable {
+            max-height: 200px; /* Adjust the desired maximum height */
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -197,11 +246,41 @@
     <div class="navbar-right">
         <div class="dropdown">
             <a class="navbar-icon" href="#"><img src="./images/cart.svg" class="icon" alt="Shopping Cart"></a>
-            <div class="dropdown-content">
-                <!-- Dropdown content here -->
-                <a href="#">Dropdown Item 1</a>
-                <a href="#">Dropdown Item 2</a>
+            <%
+
+                ArrayList<CartItem> cartItems = (ArrayList<CartItem>) session.getAttribute("cartItems");
+                ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
+            %>
+            <div class="dropdown-content dropdown-cart<%
+                if (cartItems != null && cartItems.size() >= 5) {
+                    out.print(" scrollable");
+                }
+            %>">
+                <% if (cartItems == null || cartItems.isEmpty()) { %>
+                <a href="#">Cart empty: add items</a>
+                <% } else {
+                    for (CartItem cartItem : cartItems) {
+                        Product product = productManager.getProduct(cartItem.getID());
+                %>
+                <form action="RemoveItemFromCartController" method="post" class="cart-item">
+                    <div class="product-details">
+                        <h4 class="product-name"><%= product.getName() %></h4>
+                        <p class="product-price">$<%= product.getPrice() %></p>
+                        <p class="product-quantity">Quantity: <%= cartItem.getQuantity() %></p>
+                    </div>
+                    <input type="hidden" name="productID" value="<%=product.getID()%>">
+                    <input type="hidden" name="productQuantity" value="<%=product.getQuantity()%>">
+                    <input type="hidden" name="cartItemID" value="<%=cartItem.getID()%>">
+                    <input type="hidden" name="cartItemQuantity" value="<%=cartItem.getQuantity()%>">
+                    <button type="submit" class="remove-button">Remove</button>
+                </form>
+                <% }
+                    %>
+                <a href="#">Create Order</a>
+                <%
+                } %>
             </div>
+
         </div>
         <div class="dropdown">
             <a class="navbar-icon" href="#"><img src="./images/account.svg" class="icon" alt="User Account"></a>
@@ -244,7 +323,9 @@
 
         <div class="card-btn">
             <input type="number" id="quantity" name="quantity">
-            <button type="submit"><a href="AddItemController?selectedProduct=<%=product%>"></a>Add to cart</button>
+            <input type="hidden" name="selectedProductID" value="<%=product.getID()%>">
+            <input type="hidden" name="selectedProductPrice" value="<%=product.getPrice()%>">
+            <button type="submit">Add to cart</button>
         </div>
     </form>
 <%--    </div>--%>

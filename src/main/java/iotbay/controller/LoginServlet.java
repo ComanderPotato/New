@@ -1,10 +1,12 @@
 package iotbay.controller;
 
+import iotbay.model.Cart;
+import iotbay.model.CartItem;
 import iotbay.model.UserAccount;
 import iotbay.model.dao.CartDBManager;
+import iotbay.model.dao.CartItemManager;
 import iotbay.model.dao.UserAccountDBManager;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,10 +14,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
-//@WebServlet(name="LoginServlet", value="/LoginServlet")
 public class LoginServlet extends HttpServlet {
-    private UserAccountDBManager account;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
 
@@ -25,6 +26,8 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         UserAccountDBManager account = (UserAccountDBManager) session.getAttribute("account");
         CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+
+
         UserAccount user = null;
         validator.clear(session);
        if(!validator.validateEmail(email)) {
@@ -36,10 +39,11 @@ public class LoginServlet extends HttpServlet {
        } else {
            try {
                user = account.authenticateUser(email, password);
-               session.setAttribute("isLoggedIn", true);
-               session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
                if(user != null) {
+                   session.setAttribute("isLoggedIn", true);
                    session.setAttribute("user", user);
+                   session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
+
                    request.getRequestDispatcher("MainServlet").include(request, response);
                } else {
                    session.setAttribute("existErr", "Error: user does not exist");
