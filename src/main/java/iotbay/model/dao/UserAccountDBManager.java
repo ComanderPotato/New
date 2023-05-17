@@ -27,7 +27,7 @@ public class UserAccountDBManager {
             System.out.println("No user account for Email: " + email + ", and password: " + password);
             return null;
         }
-        return new UserAccount();
+        return new UserAccount(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
     }
 
     public void addAccount(int customerID, Customer customer) throws SQLException {
@@ -43,6 +43,17 @@ public class UserAccountDBManager {
         prepStmt = conn.prepareStatement("SELECT * FROM USERACCOUNT WHERE EMAIL = ? and PASSWORD = ?");
         prepStmt.setString(1, email);
         prepStmt.setString(2, password);
+
+        rs = prepStmt.executeQuery();
+
+        if(rs.next()) {
+            return new UserAccount(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
+        }
+        return null;
+    }
+    public UserAccount findAccount(String email) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM USERACCOUNT WHERE EMAIL = ?");
+        prepStmt.setString(1, email);
 
         rs = prepStmt.executeQuery();
 

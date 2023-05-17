@@ -85,7 +85,10 @@
             color: #666;
             text-decoration: none;
         }
-
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
         .guest-link a:hover {
             text-decoration: underline;
         }
@@ -97,6 +100,8 @@
     String existErr = (String) session.getAttribute("existErr");
     String emailErr = (String) session.getAttribute("emailErr");
     String passErr = (String) session.getAttribute("passErr");
+    String userExists = (String) session.getAttribute("userExists");
+    String phoneErr = (String) session.getAttribute("phoneErr");
 %>
     <form action="RegisterServlet" method="post">
         <div class="container">
@@ -123,13 +128,15 @@
             </div>
             <div class="form-group">
                 <label for="phone">Phone Number:</label>
-                <input type="tel" id="phone" name="phone" required placeholder="Enter your phone number">
+                <input type="tel" id="phone" name="phone" required placeholder="<%=(phoneErr != null ? phoneErr : "Enter your phone number") %>">
             </div>
+            <span><%=(userExists != null ? userExists : "") %></span>
             <div class="button-container">
+                <button><a href="index.jsp">Back</a></button>
                 <button type="submit">Register</button>
             </div>
             <div class="guest-link">
-                <a href="#">Continue as Guest</a>
+                <a href="GuestServlet">Continue as Guest</a>
             </div>
         </div>
     </form>

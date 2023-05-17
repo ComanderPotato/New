@@ -1,6 +1,7 @@
 package iotbay.controller;
 
 import iotbay.model.UserAccount;
+import iotbay.model.dao.CartDBManager;
 import iotbay.model.dao.UserAccountDBManager;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,11 +13,10 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet(name="LoginServlet", value="/LoginServlet")
-
+//@WebServlet(name="LoginServlet", value="/LoginServlet")
 public class LoginServlet extends HttpServlet {
+    private UserAccountDBManager account;
     @Override
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response)   throws ServletException, IOException {
 
         HttpSession session = request.getSession();
@@ -24,6 +24,7 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         UserAccountDBManager account = (UserAccountDBManager) session.getAttribute("account");
+        CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
         UserAccount user = null;
         validator.clear(session);
        if(!validator.validateEmail(email)) {
@@ -35,9 +36,11 @@ public class LoginServlet extends HttpServlet {
        } else {
            try {
                user = account.authenticateUser(email, password);
+               session.setAttribute("isLoggedIn", true);
+               session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
                if(user != null) {
                    session.setAttribute("user", user);
-                   request.getRequestDispatcher("welcome.jsp").include(request, response);
+                   request.getRequestDispatcher("MainServlet").include(request, response);
                } else {
                    session.setAttribute("existErr", "Error: user does not exist");
                    request.getRequestDispatcher("index.jsp").include(request, response);
@@ -46,6 +49,5 @@ public class LoginServlet extends HttpServlet {
                System.out.println(ex.getMessage() == null ? "user does not exist" : "Welcome");
            }
        }
-
     }
 }

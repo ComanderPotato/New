@@ -32,10 +32,9 @@ public class CustomerDBManager {
 
     public void addCustomer(Customer customer) throws SQLException {
         prepStmt = conn.prepareStatement("INSERT INTO CUSTOMER " +
-                                                 "(EMAIL, FIRSTNAME, LASTNAME, DOB, PHONENO)" +
-                                                 "VALUES (?, ?, ?, ?, ?)");
+                                                 "(EMAIL, PASSWORD, FIRSTNAME, LASTNAME, DOB, PHONENO)" +
+                                                 "VALUES (?, ?, ?, ?, ?, ?)");
         prepareCustomer(customer);
-        System.out.println("Hello");
         rs = prepStmt.getGeneratedKeys();
 
         int customerID = rs.getInt(1);
@@ -65,10 +64,11 @@ public class CustomerDBManager {
     }
     private void prepareCustomer(Customer customer) throws SQLException {
         prepStmt.setString(1, customer.getEmail());
-        prepStmt.setString(2, customer.getFirstName());
-        prepStmt.setString(3, customer.getLastName());
-        prepStmt.setString(4, customer.getDOBAsString());
-        prepStmt.setString(5, customer.getPhoneNo());
+        prepStmt.setString(2, customer.getPassword());
+        prepStmt.setString(3, customer.getFirstName());
+        prepStmt.setString(4, customer.getLastName());
+        prepStmt.setString(5, customer.getDOBAsString());
+        prepStmt.setString(6, customer.getPhoneNo());
         prepStmt.executeUpdate();
     }
 

@@ -8,9 +8,6 @@ import java.sql.*;
 
 public abstract class DB {
     protected String driver = "org.sqlite.JDBC";
-    protected String url = "jdbc:sqlite:C:/Users/Tom/IdeaProjects/Dates/MyIoTBay/IoTBay.db";
-    protected String username = "username";
-
-    protected String password = "password";
+    protected String url = "jdbc:sqlite:/Users/tomgolding/Desktop/New/IoTBay.db";
     protected Connection conn;
 }
