@@ -51,14 +51,18 @@ public class AddItemToCartContoller extends HttpServlet{
             Cart cart = (Cart) session.getAttribute("cart");
             try {
                 Product product = productManager.getProduct(selectedProductID);
-                if(product.getQuantity() < quantityParsed) {
-                    request.getRequestDispatcher("MainServlet").include(request, response);
+                if(quantityParsed > product.getQuantity()) {
+                    request.getRequestDispatcher("main.jsp").include(request, response);
                 } else {
                     productManager.updateQuantity(selectedProductID, (product.getQuantity() - quantityParsed));
                 }
-                cartItemManager.addCartItem(cart.getID(), selectedProductID, selectedProductPrice, quantityParsed);
-                session.setAttribute("cartItems", cartItemManager.fetchCartItems(cart.getID()));
-                request.getRequestDispatcher("MainServlet").include(request, response);
+                try {
+                    cartItemManager.addCartItem(cart.getID(), selectedProductID, selectedProductPrice, quantityParsed);
+                    session.setAttribute("cartItems", cartItemManager.fetchCartItems(cart.getID()));
+                    request.getRequestDispatcher("MainServlet").include(request, response);
+                } catch (NullPointerException | SQLException ex) {
+                    Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (NullPointerException | SQLException ex) {
                 Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
             }
