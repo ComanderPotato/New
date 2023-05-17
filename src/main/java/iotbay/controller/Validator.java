@@ -13,6 +13,9 @@ public class Validator implements Serializable{
     private String namePattern = "([A-Z][a-z]+[\\s])+[A-Z][a-z]*";
     private String passwordPattern = "[a-z0-9]{4,}";
 
+    private String phonePattern = "^\\(?(0[1-9]{1}\\)?[ ]?|[+]61\\ ?|\\(?(\\+61|0)[1-9]{1}\\)?[ ]?)?(?:\\d{4}[ ]?\\d{4}|\\d{3}[ ]?\\d{3}|\\d{2}[ ]?\\d{2}[ ]?\\d{2}|\\d{4}[ ]?\\d{3}|\\d{2}[ ]?\\d{4}[ ]?\\d{4}|\\d{4}[ ]?\\d{4}[ ]?\\d{4}|\\d{3}[ ]?\\d{4}[ ]?\\d{4}|\\d{2}[ ]?\\d{2}[ ]?\\d{4}[ ]?\\d{4})$";
+
+
     public Validator(){}
     public boolean validate(String pattern, String input){
         Pattern regEx = Pattern.compile(pattern);
@@ -31,10 +34,13 @@ public class Validator implements Serializable{
     public boolean validatePassword(String password){
         return validate(passwordPattern,password);
     }
+    public boolean validatePhone(String phone) { return validate(phonePattern, phone); }
     public void clear(HttpSession session) {
-        session.setAttribute("emailErr", "Enter email");
-        session.setAttribute("passErr", "Enter password");
+        session.setAttribute("emailErr", "Enter your email");
+        session.setAttribute("passErr", "Enter your password");
         session.setAttribute("existErr", "");
-        session.setAttribute("nameErr", "Enter name");
+        session.setAttribute("nameErr", "Enter your name");
+        session.setAttribute("userExists", "");
+        session.setAttribute("phoneErr", "Enter your phone number");
     }
 }

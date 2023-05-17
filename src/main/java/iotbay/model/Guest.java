@@ -4,15 +4,13 @@ import java.io.Serializable;
 
 public class Guest implements Serializable {
     private int ID;
-    private int cartID;
 
     public Guest() {
     }
-
-    public Guest(int ID, int cartID) {
+    public Guest(int ID) {
         this.ID = ID;
-        this.cartID = cartID;
     }
+
 
     public int getID() {
         return ID;
@@ -22,11 +20,4 @@ public class Guest implements Serializable {
         this.ID = ID;
     }
 
-    public int getCartID() {
-        return cartID;
-    }
-
-    public void setCartID(int cartID) {
-        this.cartID = cartID;
-    }
 }

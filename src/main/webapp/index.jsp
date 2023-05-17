@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="iotbay.model.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,34 +73,34 @@
         }
     </style>
 </head>
-    <body>
-    <jsp:include page="/ConnServlet" flush="true" />
-    <%
-            String existErr = (String) session.getAttribute("existErr");
-            String emailErr = (String) session.getAttribute("emailErr");
-            String passErr = (String) session.getAttribute("passErr");
-        %>
-        <div class="container">
-            <h1>Welcome to IoTBay</h1>
+<body>
+<%
+    String existErr = (String) session.getAttribute("existErr");
+    String emailErr = (String) session.getAttribute("emailErr");
+    String passErr = (String) session.getAttribute("passErr");
+%>
+<div class="container">
+    <h1>Welcome to IoTBay</h1>
 
-            <form action="LoginServlet" method="post">
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" placeholder="<%=(emailErr != null ? emailErr : "Enter email")%>">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" placeholder="<%=(passErr != null ? passErr : "Enter password") %>">
-                </div>
-                <span><%=(existErr != null ? existErr : "") %></span>
-                <div class="button-container">
-                    <button type="submit">Login</button>
-                    <button><a href="register.jsp">Sign Up</a></button>
-                </div>
-                <div class="guest-link">
-                    <a href="#">Continue as Guest</a>
-                </div>
-            </form>
+    <form action="LoginServlet" method="post">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" placeholder="<%=(emailErr != null ? emailErr : "Enter email")%>">
         </div>
-    </body>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="<%=(passErr != null ? passErr : "Enter password") %>">
+        </div>
+        <span><%=(existErr != null ? existErr : "") %></span>
+        <div class="button-container">
+            <button type="submit">Login</button>
+            <button><a href="register.jsp">Sign Up</a></button>
+        </div>
+        <div class="guest-link">
+            <a href="GuestServlet">Continue as Guest</a>
+        </div>
+    </form>
+</div>
+        <jsp:include page="/ConnServlet" flush="true" />
+</body>
 </html>

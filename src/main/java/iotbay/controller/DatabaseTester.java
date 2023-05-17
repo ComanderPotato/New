@@ -15,19 +15,20 @@ import java.util.logging.Logger;
 public class DatabaseTester {
 
     private static Scanner sc = new Scanner(System.in);
-    private static CustomerDBManager cdb;
     private static Customer customer;
     public static void main(String[] args) {
         try {
             DBConnector connector = new DBConnector();
+            if(connector == null) {
+                System.out.println("null");
+            } else {
+                System.out.println("not null");
+            }
             Connection conn = connector.openConnection();
             // Instantiate what DAO object you want to test
 
-            cdb = new CustomerDBManager(conn);
-
-                    LocalDate date = LocalDate.now();
-            Customer c = new Customer("tomgolding2012@outlook.com", "1", "Tom", "Golding", date, "0417503531");
-            cdb.addCustomer(c);
+           CartDBManager cdb = new CartDBManager(conn);
+//            cdb.createCart();
 
 //            menu();
             connector.closeConnection();
