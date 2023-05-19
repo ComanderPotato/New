@@ -1,5 +1,7 @@
 package iotbay.controller;
 
+import iotbay.model.OrderStatus;
+import jakarta.persistence.criteria.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -22,9 +24,15 @@ public class ConnServlet extends HttpServlet {
     private UserAccountDBManager account;
     private CustomerDBManager customer;
     private ProductDBManager productManager;
+    private ProductCategoryDBManager productCategoryManager;
     private GuestDBManager guestManager;
     private CartDBManager cartManager;
-    CartItemManager cartItemManager;
+    private CartItemManager cartItemManager;
+    private OrderDBManager orderManager;
+    private OrderLineDBManager orderLineManager;
+    private OrderStatusDBManager orderStatusManager;
+    private ShippingMethodDBManager shippingMethodManager;
+
     private Connection conn;
 
     @Override //Create and instance of DBConnector for the deployment session
@@ -44,9 +52,14 @@ public class ConnServlet extends HttpServlet {
             customer = new CustomerDBManager(conn);
             account = new UserAccountDBManager(conn);
             productManager = new ProductDBManager(conn);
+            productCategoryManager = new ProductCategoryDBManager(conn);
             guestManager = new GuestDBManager(conn);
             cartManager = new CartDBManager(conn);
             cartItemManager = new CartItemManager(conn);
+            orderManager = new OrderDBManager(conn);
+            orderLineManager = new OrderLineDBManager(conn);
+            orderStatusManager = new OrderStatusDBManager(conn);
+            shippingMethodManager = new ShippingMethodDBManager(conn);
         } catch (SQLException ex) {
             Logger.getLogger(ConnServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,9 +67,15 @@ public class ConnServlet extends HttpServlet {
         session.setAttribute("customer", customer);
         session.setAttribute("account", account);
         session.setAttribute("productManager", productManager);
+        session.setAttribute("productCategoryManager", productCategoryManager);
         session.setAttribute("guestManager", guestManager);
         session.setAttribute("cartManager", cartManager);
         session.setAttribute("cartItemManager", cartItemManager);
+        session.setAttribute("orderManager", orderManager);
+        session.setAttribute("orderLineManager", orderLineManager);
+        session.setAttribute("orderStatusManager", orderStatusManager);
+        session.setAttribute("shippingMethodManager", shippingMethodManager);
+
     }
     @Override //Destroy the servlet and release the resources of the application (terminate also the db connection)
     public void destroy() {

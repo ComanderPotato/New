@@ -12,7 +12,7 @@ public class Cart {
         if(userType.equals("guest")) {
             this.guestID = userID;
         } else {
-            this.userAccountID = userAccountID;
+            this.userAccountID = userID;
         }
     }
 

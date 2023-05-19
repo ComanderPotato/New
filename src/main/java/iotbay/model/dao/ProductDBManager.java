@@ -19,10 +19,9 @@ public class ProductDBManager {
         rs = prepStmt.executeQuery();
         ArrayList<Product> products = new ArrayList<>();
         while(rs.next()) {
-//            String category = fetchProductCategory(rs.getInt(2));
             products.add(new Product(
                     rs.getInt(1),
-                    "category",
+                    rs.getInt(2),
                     rs.getString(3),
                     rs.getString(4),
                     rs.getString(5),
@@ -30,15 +29,6 @@ public class ProductDBManager {
                     rs.getInt(7)));
         }
         return products;
-    }
-    public int fetchProductCategory(int categoryID) throws SQLException {
-        prepStmt = conn.prepareStatement("SELECT * FROM PRODUCTCATEGORY WHERE ID = ?");
-        prepStmt.setInt(1, categoryID);
-        rs = prepStmt.executeQuery();
-        if(rs.next()) {
-            return rs.getInt("category");
-        }
-        return -1;
     }
     public Product getProduct(int id) throws SQLException {
         prepStmt = conn.prepareStatement("SELECT * FROM PRODUCT WHERE ID = ?");

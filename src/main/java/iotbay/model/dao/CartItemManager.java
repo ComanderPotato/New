@@ -41,4 +41,30 @@ public class CartItemManager implements Serializable {
         prepStmt.setInt(1, id);
         prepStmt.executeUpdate();
     }
+    public void updateCartItemQuantity(int productID, int cartID, int quantity) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM CARTITEM WHERE PRODUCTID = ? AND CARTID = ?");
+        prepStmt.setInt(1, productID);
+        prepStmt.setInt(2, cartID);
+        rs = prepStmt.executeQuery();
+
+        if(rs.next()) {
+            prepStmt = conn.prepareStatement("UPDATE CARTITEM SET QUANTITY = ? WHERE PRODUCTID = ?");
+            int newQuantity = (rs.getInt(5) + quantity);
+            prepStmt.setInt(1, newQuantity);
+            prepStmt.setInt(2, productID);
+            prepStmt.executeUpdate();
+        }
+    }
+    public boolean cartItemExists(int productID, int cartID) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM CARTITEM WHERE PRODUCTID = ? AND CARTID = ?");
+        prepStmt.setInt(1, productID);
+        prepStmt.setInt(2, cartID);
+
+        rs = prepStmt.executeQuery();
+        if(rs.next()) {
+            return true;
+        }
+        return false;
+    }
+
 }

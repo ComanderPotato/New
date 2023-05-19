@@ -26,8 +26,8 @@ public class CustomerDBManager {
             return null;
         }
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate dob = LocalDate.parse(rs.getString(5), format);
-        return new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), dob, rs.getString(7));
+        LocalDate dob = LocalDate.parse(rs.getString(6), format);
+        return new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), dob, rs.getString(6));
     }
 
     public void addCustomer(Customer customer) throws SQLException {

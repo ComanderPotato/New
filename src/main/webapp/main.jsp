@@ -3,6 +3,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="iotbay.model.dao.UserAccountDBManager" %>
 <%@ page import="iotbay.model.dao.ProductDBManager" %>
+<%@ page import="iotbay.model.dao.ProductCategoryDBManager" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,15 +62,18 @@
             height: 24px;
             vertical-align: middle;
         }
+        .main-container {
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px 0;
 
+        }
         .grid-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            padding: 20px;
-            margin: 0 auto;
-            max-width: 1200px;
-            justify-items: center;
+            padding: 20px 0;
+            /*justify-items: center;*/
         }
 
         .product-card {
@@ -112,7 +116,7 @@
             margin-top: auto;
 
         }
-        .card-btn button {
+        .button-grn {
             padding: 10px 20px;
             font-size: 16px;
             border-radius: 3px;
@@ -122,8 +126,21 @@
             cursor: pointer;
         }
 
-        .card-btn button:hover {
+        .button-grn:hover {
             background-color: #45a049;
+        }
+        .button-red {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 3px;
+            border: none;
+            background-color: #af4c4c;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .button-red:hover {
+            background-color: #a04545;
         }
         .dropdown {
             position: relative;
@@ -230,95 +247,87 @@
             max-height: 200px; /* Adjust the desired maximum height */
             overflow-y: auto;
         }
+        .btn-dropdown {
+            padding: 4px 8px;
+        }
+        .form-btns {
+            margin-bottom: 10px;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-input {
+            width: 200px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .sort-select {
+            width: 150px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-select {
+            width: 150px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 <jsp:include page="header.jsp" />
-<%--<nav class="navbar">--%>
-<%--    <div class="navbar-left">--%>
-<%--        <a class="navbar-logo" href="#">IoTBay</a>--%>
-<%--    </div>--%>
-<%--    <div class="navbar-center">--%>
-<%--        <a class="navbar-link" href="#">Home</a>--%>
-<%--        <a class="navbar-link" href="#">Products</a>--%>
-<%--        <a class="navbar-link" href="#">Orders</a>--%>
-<%--        <a class="navbar-link" href="#">Device Collection</a>--%>
-<%--    </div>--%>
-<%--    <div class="navbar-right">--%>
-<%--        <div class="dropdown">--%>
-<%--            <a class="navbar-icon" href="#"><img src="./images/cart.svg" class="icon" alt="Shopping Cart"></a>--%>
-<%--            <%--%>
-
-<%--                ArrayList<CartItem> cartItems = (ArrayList<CartItem>) session.getAttribute("cartItems");--%>
-<%--                ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");--%>
-<%--            %>--%>
-<%--            <div class="dropdown-content dropdown-cart<%--%>
-<%--                if (cartItems != null && cartItems.size() >= 5) {--%>
-<%--                    out.print(" scrollable");--%>
-<%--                }--%>
-<%--            %>">--%>
-<%--                <% if (cartItems == null || cartItems.isEmpty()) { %>--%>
-<%--                <a href="#">Cart empty: add items</a>--%>
-<%--                <% } else {--%>
-<%--                    for (CartItem cartItem : cartItems) {--%>
-<%--                        Product product = productManager.getProduct(cartItem.getID());--%>
-<%--                %>--%>
-<%--                <form action="RemoveItemFromCartController" method="post" class="cart-item">--%>
-<%--                    <div class="product-details">--%>
-<%--                        <h4 class="product-name"><%= product.getName() %></h4>--%>
-<%--                        <p class="product-price">$<%= product.getPrice() %></p>--%>
-<%--                        <p class="product-quantity">Quantity: <%= cartItem.getQuantity() %></p>--%>
-<%--                    </div>--%>
-<%--                    <input type="hidden" name="productID" value="<%=product.getID()%>">--%>
-<%--                    <input type="hidden" name="productQuantity" value="<%=product.getQuantity()%>">--%>
-<%--                    <input type="hidden" name="cartItemID" value="<%=cartItem.getID()%>">--%>
-<%--                    <input type="hidden" name="cartItemQuantity" value="<%=cartItem.getQuantity()%>">--%>
-<%--                    <button type="submit" class="remove-button">Remove</button>--%>
-<%--                </form>--%>
-<%--                <% }--%>
-<%--                    %>--%>
-<%--                <a href="#">Create Order</a>--%>
-<%--                <%--%>
-<%--                } %>--%>
-<%--            </div>--%>
-
-<%--        </div>--%>
-<%--        <div class="dropdown">--%>
-<%--            <a class="navbar-icon" href="#"><img src="./images/account.svg" class="icon" alt="User Account"></a>--%>
-<%--            <div class="dropdown-content">--%>
-<%--                <!-- Dropdown content here -->--%>
-<%--                <%--%>
-<%--                    boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");--%>
-<%--                    if(isLoggedIn) {--%>
-<%--                %>--%>
-<%--                <a href="#">Account</a>--%>
-<%--                <a class="logout"href="LogoutController">Logout</a>--%>
-<%--                <% }  else {%>--%>
-<%--                <a class="login" href="LogoutController">Login</a>--%>
-<%--                <a class="signup" href="register.jsp">Signup</a>--%>
-<%--                <% } %>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-
-<%--</nav>--%>
 <%
-//    UserAccount name = (UserAccount) session.getAttribute("user");
     ArrayList<Product> productList = (ArrayList<Product>) session.getAttribute("products");
+    ProductCategoryDBManager productCategoryManager = (ProductCategoryDBManager) session.getAttribute("productCategoryManager");
 %>
+<div class="main-container">
+<div class="search-bar" id="search-form">
+    <input type="text" class="search-input" placeholder="Search...">
+    <select class="sort-select">
+        <option value="name">Sort by Name</option>
+        <option value="price">Sort by Price</option>
+        <option value="category">Sort by Category</option>
+    </select>
 
+    <select class="filter-select">
+        <option value="">All Categories</option>
+        <%
+            ArrayList<ProductCategory> productCategories = productCategoryManager.fetchCategories();
+            if(!productCategories.isEmpty()) {
+                for(ProductCategory category : productCategories) {
+        %>
+            <option value="category"><%=category.getCategory()%></option>
+        <%
+                }
+            }
+        %>
+    </select>
+</div>
 <div class="grid-container">
     <%
         for (Product product : productList) {
+            String productCategory = productCategoryManager.getCategory(product.getID());
     %>
 <%--    <div class="product-card">--%>
+
     <form action="AddItemController" method="post" class="product-card">
 
         <img src="<%= product.getImage()%>" alt="Product Image">
 
         <h3><%= product.getName()%></h3>
         <p><%= product.getDescription()%></p>
-        <p>Category: <%= product.getCategory()%></p>
+        <p>Category: <%= productCategory %></p>
         <p class="price">$<%= product.getPrice()%></p>
         <p class="quantity">In Stock: <%= product.getQuantity()%></p>
 
@@ -326,7 +335,7 @@
             <input type="number" id="quantity" name="quantity">
             <input type="hidden" name="selectedProductID" value="<%=product.getID()%>">
             <input type="hidden" name="selectedProductPrice" value="<%=product.getPrice()%>">
-            <button type="submit">Add to cart</button>
+            <button type="submit" class="button-grn">Add to cart</button>
         </div>
     </form>
 <%--    </div>--%>
@@ -334,12 +343,35 @@
     <% } %>
 
 </div>
+</div>
 <script>
-    function addToCart(productID) {
-        <%
+    const form = document.getElementById('search-form');
+    const searchInput = document.querySelector('.search-input');
+    const sortSelect = document.querySelector('.sort-select');
+    const filterSelect = document.querySelector('.filter-select');
 
-        %>
+    function handleFormChange(event) {
+        event.preventDefault(); // Prevent the default form submission
+        console.log(event.target)
+        const xhr = new XMLHttpRequest();
+        xhr.open(
+            'GET',
+            '/SortProductsServlet?search=' +
+            encodeURIComponent(searchInput.value) +
+            '&sort=' +
+            encodeURIComponent(sortSelect.value) +
+            '&filter=' +
+            encodeURIComponent(filterSelect.value),
+            true
+        );
+        xhr.send();
     }
+
+    // Add event listener to the form
+    form.addEventListener('submit', handleFormChange);
+    searchInput.addEventListener('input', handleFormChange);
+    sortSelect.addEventListener('change', handleFormChange);
+    filterSelect.addEventListener('change', handleFormChange);
 </script>
 </body>
 </html>

@@ -102,4 +102,9 @@ public class ShopOrder {
     public void setStatusID(int statusID) {
         this.statusID = statusID;
     }
+    public String getDateAsString() {
+        String date = this.date.toString();
+        date = date.replace('T', ' ');
+        return date;
+    }
 }

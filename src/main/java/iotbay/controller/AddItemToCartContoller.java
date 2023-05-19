@@ -30,7 +30,7 @@ public class AddItemToCartContoller extends HttpServlet{
         CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
         CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
         ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
-
+//        Cart cart = (Cart) session.getAttribute("cart");
         if(session.getAttribute("user") == null) {
             guest = (Guest) session.getAttribute("guest");
             userType = "guest";
@@ -44,10 +44,14 @@ public class AddItemToCartContoller extends HttpServlet{
         double selectedProductPrice = Double.parseDouble(request.getParameter("selectedProductPrice"));
         String quantity = request.getParameter("quantity");
         int quantityParsed;
+
         if(quantity == null || quantity.isEmpty()) {
             request.getRequestDispatcher("main.jsp").include(request, response);
         } else {
             quantityParsed = Integer.parseInt(quantity);
+            if(quantityParsed < 0)
+                request.getRequestDispatcher("main.jsp").include(request, response);
+
             Cart cart = (Cart) session.getAttribute("cart");
             try {
                 Product product = productManager.getProduct(selectedProductID);
@@ -57,8 +61,12 @@ public class AddItemToCartContoller extends HttpServlet{
                     productManager.updateQuantity(selectedProductID, (product.getQuantity() - quantityParsed));
                 }
                 try {
-                    cartItemManager.addCartItem(cart.getID(), selectedProductID, selectedProductPrice, quantityParsed);
-                    session.setAttribute("cartItems", cartItemManager.fetchCartItems(cart.getID()));
+                    if(cartItemManager.cartItemExists(product.getID(), cart.getID())) {
+                        cartItemManager.updateCartItemQuantity(product.getID(), cart.getID(), quantityParsed);
+                    } else {
+                        cartItemManager.addCartItem(cart.getID(), selectedProductID, selectedProductPrice, quantityParsed);
+                        session.setAttribute("cartItems", cartItemManager.fetchCartItems(cart.getID()));
+                    }
                     request.getRequestDispatcher("MainServlet").include(request, response);
                 } catch (NullPointerException | SQLException ex) {
                     Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,6 +75,5 @@ public class AddItemToCartContoller extends HttpServlet{
                 Logger.getLogger(AddItemToCartContoller.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 }

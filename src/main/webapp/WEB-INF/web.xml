@@ -37,7 +37,34 @@
         <servlet-name>LogoutController</servlet-name>
         <servlet-class>iotbay.controller.LogoutController</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>CreateOrderController</servlet-name>
+        <servlet-class>iotbay.controller.CreateOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddToExistingOrderController</servlet-name>
+        <servlet-class>iotbay.controller.AddToExistingOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>OrdersServlet</servlet-name>
+        <servlet-class>iotbay.controller.OrdersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CancelOrderController</servlet-name>
+        <servlet-class>iotbay.controller.CancelOrderController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SortProductsServlet</servlet-name>
+        <servlet-class>iotbay.controller.SortProductsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SortOrdersController</servlet-name>
+        <servlet-class>iotbay.controller.SortOrdersController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SaveOrderController</servlet-name>
+        <servlet-class>iotbay.controller.SaveOrderController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ConnServlet</servlet-name>
         <url-pattern>/ConnServlet</url-pattern>
@@ -69,6 +96,34 @@
     <servlet-mapping>
         <servlet-name>RemoveItemFromCartController</servlet-name>
         <url-pattern>/RemoveItemFromCartController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateOrderController</servlet-name>
+        <url-pattern>/CreateOrderController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToExistingOrderController</servlet-name>
+        <url-pattern>/AddToExistingOrderController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrdersServlet</servlet-name>
+        <url-pattern>/OrdersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CancelOrderController</servlet-name>
+        <url-pattern>/CancelOrderController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SortProductsServlet</servlet-name>
+        <url-pattern>/SortProductsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SortOrdersController</servlet-name>
+        <url-pattern>/SortOrdersController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveOrderController</servlet-name>
+        <url-pattern>/SaveOrderController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

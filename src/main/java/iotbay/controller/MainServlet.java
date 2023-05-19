@@ -26,20 +26,33 @@ public class MainServlet extends HttpServlet {
         ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
         CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
         CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+        OrderDBManager orderManager = (OrderDBManager) session.getAttribute("orderManager");
+        boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
         Cart cart = (Cart) session.getAttribute("cart");
-        UserAccount user = (UserAccount) session.getAttribute("user");
+        UserAccount user;
+        Guest guest;
         validator.clear(session);
         ArrayList<CartItem> cartItems;
         ArrayList<Product> products;
+        ArrayList<ShopOrder> orders;
         try {
+            if(isLoggedIn) {
+                user = (UserAccount) session.getAttribute("user");
+                orders = orderManager.fetchOrders(user.getID(), "user");
+                session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
+            } else {
+                guest = (Guest) session.getAttribute("guest");
+                orders = orderManager.fetchOrders(guest.getID(), "guest");
+                session.setAttribute("cart", cartManager.getCart(guest.getID(), "guest"));
+
+            }
             products = productManager.fetchProducts();
             session.setAttribute("products", products);
+            session.setAttribute("orders", orders);
             cartItems = cartItemManager.fetchCartItems(cart.getID());
             session.setAttribute("cartItems", cartItems);
-            session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));
         } catch (NullPointerException | SQLException ex) {
             Logger.getLogger(MainServlet.class.getName()).log(Level.SEVERE, null, ex);
-
         }
         request.getRequestDispatcher("main.jsp").include(request, response);
     }
@@ -50,14 +63,23 @@ public class MainServlet extends HttpServlet {
         ProductDBManager productManager = (ProductDBManager) session.getAttribute("productManager");
         CartItemManager cartItemManager = (CartItemManager) session.getAttribute("cartItemManager");
         CartDBManager cartManager = (CartDBManager) session.getAttribute("cartManager");
+        OrderDBManager orderManager = (OrderDBManager) session.getAttribute("orderManager");
+        boolean isLoggedIn = (boolean) session.getAttribute("isLoggedIn");
         Cart cart = (Cart) session.getAttribute("cart");
         UserAccount user = (UserAccount) session.getAttribute("user");
         validator.clear(session);
         ArrayList<CartItem> cartItems;
         ArrayList<Product> products;
+        ArrayList<ShopOrder> orders;
         try {
+            if(isLoggedIn) {
+                orders = orderManager.fetchOrders(user.getID(), "user");
+            } else {
+                orders = orderManager.fetchOrders(user.getID(), "guest");
+            }
             products = productManager.fetchProducts();
             session.setAttribute("products", products);
+            session.setAttribute("orders", orders);
             cartItems = cartItemManager.fetchCartItems(cart.getID());
             session.setAttribute("cartItems", cartItems);
             session.setAttribute("cart", cartManager.getCart(user.getID(), "user"));

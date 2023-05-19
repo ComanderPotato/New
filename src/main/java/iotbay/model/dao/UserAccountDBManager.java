@@ -17,7 +17,6 @@ public class UserAccountDBManager {
     }
 
     public UserAccount authenticateUser(String email, String password) throws SQLException {
-        System.out.println("Balls22");
         prepStmt = conn.prepareStatement("SELECT * FROM USERACCOUNT WHERE EMAIL = ? and PASSWORD = ?");
         prepStmt.setString(1, email);
         prepStmt.setString(2, password);

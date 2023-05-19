@@ -31,7 +31,7 @@ public class CartDBManager {
 
     public Cart getCart(int id, String userType) throws SQLException {
         String sql;
-        if(userType == "guest") {
+        if(userType.equals("guest")) {
             sql = "SElECT ID, GUESTID FROM CART WHERE GUESTID = ?";
         } else {
             sql = "SELECT ID, USERACCOUNTID FROM CART WHERE USERACCOUNTID = ?";
@@ -45,14 +45,4 @@ public class CartDBManager {
         }
         return null;
     }
-//    public ArrayList<CartItem> fetchCart(int id) throws SQLException {
-//        prepStmt = conn.prepareStatement("SELECT * FROM CART WHERE USERACCOUNTID = ?");
-//        prepStmt.setInt(1, id);
-//        ArrayList<CartItem> cartItems = new ArrayList<>();
-//        rs = prepStmt.executeQuery();
-//        while(rs.next()) {
-//            cartItems.add(new CartItem(rs.getInt(1), rs.getInt(2), rs.getInt(3), rs.getDouble(4), rs.getInt(5)));
-//        }
-//        return cartItems;
-//    }
 }
