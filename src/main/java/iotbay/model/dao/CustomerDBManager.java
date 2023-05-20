@@ -27,7 +27,14 @@ public class CustomerDBManager {
         }
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate dob = LocalDate.parse(rs.getString(6), format);
-        return new Customer(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), dob, rs.getString(6));
+        return new Customer(
+                rs.getInt(1),
+                rs.getString(2),
+                rs.getString(3),
+                rs.getString(4),
+                rs.getString(5),
+                dob,
+                rs.getString(7));
     }
 
     public void addCustomer(Customer customer) throws SQLException {
@@ -42,13 +49,11 @@ public class CustomerDBManager {
         udb.addAccount(customerID, customer);
     }
 
-    public void updatedCustomer(Customer updatedCustomer) throws SQLException {
-        prepStmt = conn.prepareStatement("UPDATE CUSTOMER SET" +
-                                                 "EMAIL = ?," +
-                                                 "FIRSTNAME = ?" +
-                                                 "LASTNAME = ?" +
-                                                 "DOB = ?" +
-                                                 "PHONENO = ?");
+    public void updatedCustomer(int userID, Customer updatedCustomer) throws SQLException {
+        prepStmt = conn.prepareStatement("UPDATE CUSTOMER " +
+                "SET EMAIL = ?, PASSWORD = ?, FIRSTNAME = ?, LASTNAME = ?, DOB = ?, PHONENO = ?" +
+                "WHERE ID = ?");
+        prepStmt.setInt(7, userID);
         prepareCustomer(updatedCustomer);
     }
     public boolean customerExists(String email) throws SQLException {
@@ -76,5 +81,25 @@ public class CustomerDBManager {
         prepStmt = conn.prepareStatement("DELETE FROM CUSTOMER WHERE ID = ?");
         prepStmt.setInt(1, id);
         prepStmt.executeUpdate();
+    }
+    public Customer getCustomer(String email, String password) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM CUSTOMER WHERE EMAIL = ? AND PASSWORD = ?");
+        prepStmt.setString(1, email);
+        prepStmt.setString(2, password);
+
+        rs = prepStmt.executeQuery();
+        if(rs.next()) {
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dob = LocalDate.parse(rs.getString(6), format);
+            return new Customer(
+                    rs.getInt(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4),
+                    rs.getString(5),
+                    dob,
+                    rs.getString(7));
+        }
+        return null;
     }
 }

@@ -30,6 +30,10 @@ class UserAccountDBManagerTest {
             assertEquals(4, userAccount.getID());
             assertEquals(4, userAccount.getCustomerID());
 
+
+            userAccount = userAccountDBManager.authenticateUser("jeremy@outlook.com", "password10");
+
+            assertNull(userAccount);
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,6 +84,20 @@ class UserAccountDBManagerTest {
             assertNotNull(userAccount);
             assertEquals(4, userAccount.getID());
             assertEquals(4, userAccount.getCustomerID());
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            fail("Exception occurred while testing findAccountEmail: " + e.getMessage());
+        }
+    }
+
+    @Test
+    void addAccount() {
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:/Users/tomgolding/Desktop/New/IoTBay.db");
+            UserAccountDBManager userAccountDBManager = new UserAccountDBManager(conn);
+
 
             conn.close();
         } catch (SQLException e) {

@@ -12,6 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class CartDBManagerTest {
 
     @Test
+    void createCart() {
+
+    }
+        @Test
     void getCart() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:sqlite:/Users/tomgolding/Desktop/New/IoTBay.db");

@@ -61,4 +61,9 @@ public class UserAccountDBManager {
         }
         return null;
     }
+    public void deleteAccount(int id) throws SQLException {
+        prepStmt = conn.prepareStatement("DELETE FROM USERACCOUNT WHERE ID = ?");
+        prepStmt.setInt(1, id);
+        prepStmt.executeUpdate();
+    }
 }

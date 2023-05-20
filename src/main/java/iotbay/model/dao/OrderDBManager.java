@@ -62,14 +62,38 @@ public class OrderDBManager {
             String date = rs.getString("date");
             DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd['T']HH:mm:ss");
             LocalDateTime time = LocalDateTime.parse(date, format);
-            int paymentID = rs.getInt("paymentID"); // Retrieve as Integer instead of int
-            int addressID = rs.getInt("addressID"); // Retrieve as Integer instead of int
-            int shippingMethodID = rs.getInt("shippingMethodID"); // Retrieve as Integer instead of int
+            int paymentID = rs.getInt("paymentID");
+            int addressID = rs.getInt("addressID");
+            int shippingMethodID = rs.getInt("shippingMethodID");
             double total = rs.getDouble("total");
-            int statusID = rs.getInt("statusID"); // Retrieve as Integer instead of int
+            int statusID = rs.getInt("statusID");
             orders.add(new ShopOrder(ID, userID, time, paymentID, addressID, shippingMethodID, total, statusID, userType));
         }
         return orders;
+    }
+    public ShopOrder getOrder(int orderID, String userType) throws SQLException {
+        prepStmt = conn.prepareStatement("SELECT * FROM SHOPORDER WHERE ID = ?");
+        prepStmt.setInt(1, orderID);
+        rs = prepStmt.executeQuery();
+        if(rs.next()) {
+            int ID = rs.getInt("ID");
+            int userID;
+            if(userType.equals("guest")) {
+                userID = rs.getInt("guestID");
+            } else {
+                userID = rs.getInt("userAccountID");
+            }
+            String date = rs.getString("date");
+            DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd['T']HH:mm:ss");
+            LocalDateTime time = LocalDateTime.parse(date, format);
+            int paymentID = rs.getInt("paymentID");
+            int addressID = rs.getInt("addressID");
+            int shippingMethodID = rs.getInt("shippingMethodID");
+            double total = rs.getDouble("total");
+            int statusID = rs.getInt("statusID");
+            return new ShopOrder(ID, userID, time, paymentID, addressID, shippingMethodID, total, statusID, userType);
+        }
+        return null;
     }
     public void cancelOrder(int id) throws SQLException {
         prepStmt = conn.prepareStatement("UPDATE SHOPORDER SET STATUSID = 7 WHERE ID = ?");
@@ -90,6 +114,11 @@ public class OrderDBManager {
         prepStmt = conn.prepareStatement("UPDATE SHOPORDER SET SHIPPINGMETHODID = ? WHERE ID = ?");
         prepStmt.setInt(1, methodID);
         prepStmt.setInt(2, id);
+        prepStmt.executeUpdate();
+    }
+    public void deleteOrder(int id) throws SQLException {
+        prepStmt = conn.prepareStatement("DELETE FROM SHOPORDER WHERE ID = ?");
+        prepStmt.setInt(1, id);
         prepStmt.executeUpdate();
     }
 }
